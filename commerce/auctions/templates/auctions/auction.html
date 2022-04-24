@@ -1,0 +1,66 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    {% if auction.closed == False %}
+        <form action="{% url 'watch' auction.id %}" method="post">
+            {% csrf_token %}
+            <button id="button-auction" class="button-auction" type="submit"><i id="heart" class="fa fa-heart-o"></i>Watchlist</button>
+        </form>   
+    {% endif %}
+    <br>
+    <div style="width: 1000px;">
+        <div class="row">
+            <div class="col-sm-5">
+                <h1>{{ auction.title }}</h1>
+
+                <h3>Description: {{ auction.desc }}</h3>
+                {% if auction.category %}
+                    <h3>Category: {{ auction.category }}</h3>
+                {% else %}
+                    <h3>Category: None</h3>
+                {% endif %}
+                <h3>Sold by: {{ person }}</h3>
+
+                {% if auction.closed %}
+                    <h3>Sold to {{auction.bids.user}}</h3>
+                {% else %}
+                    <h3>Starting price: ${{auction.price}}</h3>
+                {% if auction.bids.cost %}
+                    <h3>Highest bid: ${{auction.bids.cost}} by {{auction.bids.user}}</h3>
+                {% endif %}
+            </div>
+            <div class="col-sm-5">
+                {% if auction.image %}
+                <div class="col-sm-3">
+                    <img src="{{ auction.image }}" alt="image" style="width: 250px; height: 250px">
+                </div>
+                {% else %}
+                    <div class="col-sm-3"></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+        <br>
+        {% if request.user != auction.owner %}
+        <form action="{% url 'bid' auction.id %}" method="post">
+            {% csrf_token %}
+            <input type="number" name="maxBid" placeholder="Total bid">
+            <button type="submit">Bid here</button>
+        </form>
+        {% else %}
+            <form action="{% url 'close' auction.id%}" method="post">
+                {% csrf_token %}
+                <button type="submit">Close Auction</button>
+            </form>       
+        {% endif %}   
+    {% endif %}
+    <br>
+    <form method=post action="{% url 'add_comment' auction.id %}">
+        {% csrf_token %}
+        <input type="text" name="comment" placeholder="comment">
+        <button type="submit">Comment</button>
+    </form>
+    {% for comments in comment %}
+        <h6>{{comments}}</h6>
+    {% endfor %} 
+{% endblock %}
