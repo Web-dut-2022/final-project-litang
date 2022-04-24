@@ -183,9 +183,13 @@ def watch(request, listing_item):
 
 # Render watchlist page
 def watch_open(request):
-    watch = get_object_or_404(WatchList, watch_user=request.user)
+    #watch = get_object_or_404(WatchList, watch_user=request.user)
+    try:
+        myWatchList = WatchList.objects.get(watch_user=request.user)
+    except WatchList.DoesNotExist:
+        return render(request, "auctions/watchlistnotfound.html")
     return render(request, "auctions/watchlist.html", {
-        'watchList': watch.auctions.filter(closed=False)
+        'watchList': myWatchList.auctions.filter(closed=False)
     })
 
 # Allow the user to comment
