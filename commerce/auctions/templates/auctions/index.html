@@ -1,0 +1,32 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+
+    {% for list in lists %}
+
+    <div class="container border p-2 m-2" style="width: 750px;">
+        <div class="row">
+            {% if list.image %}
+                <div class="col-sm-3">
+                    <img src="{{ list.image }}" alt="image" style="width: 175px; height: 175px">
+                </div>
+            {% else %}
+                <div class="col-sm-3"></div>
+            {% endif %}
+            
+            <div class="col-sm-5">
+                <h2>{{ list.title }}</h2>
+                <h6>{{ list.desc }}</h6>
+                {% if list.bids != None %}
+                    <h5>Highest bid: ${{ list.bids.cost }}</h5>
+                {% else %}
+                    <h5>Price: ${{ list.price }}</h5>
+                {% endif %}
+                <h5>Seller: {{ list.owner }}</h5>
+                <a href="{% url 'listing' list.id %}">Listing page</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}
