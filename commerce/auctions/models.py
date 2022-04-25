@@ -26,11 +26,11 @@ class List(models.Model):
     price = models.IntegerField(max_length=6)
     bids = models.ForeignKey(Bids, on_delete=models.CASCADE, blank=True, related_name="bidders", null=True)
     comments = models.ManyToManyField(Comment, related_name="comments", blank=True)
-    image = models.URLField(null=True, blank=True)
+    imguser = models.CharField(max_length=64)
+    image = models.ImageField(upload_to='photos/')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="seller")
     category = models.CharField(max_length=20, default="None")
     closed = models.BooleanField(default=False)
-    
     def __str__(self):
         return f"{self.title}, Costs: {self.price},  Seller: {self.owner}"
 
@@ -39,4 +39,9 @@ class WatchList(models.Model):
     auctions = models.ManyToManyField('List', related_name='list_watchlist', blank=True)
     def __str__(self):
         return f"{self.user} personal watchlist"
+
+
+
+
+    
 

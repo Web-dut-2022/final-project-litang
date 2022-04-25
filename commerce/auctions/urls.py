@@ -1,5 +1,7 @@
 from django.urls import path
-
+from django.contrib import admin
+from django.conf.urls.static import static
+from django.conf import settings
 from . import views
 
 urlpatterns = [
@@ -14,5 +16,7 @@ urlpatterns = [
     path("watch/<str:listing_item>", views.watch, name="watch"),
     path("watch_open", views.watch_open, name="watch_open"),
     path("add_comment/<str:listing_item>", views.add_comment, name="add_comment"),
-    path("category", views.category, name="category")
-]
+    path("category", views.category, name="category"),
+    path('admin/', admin.site.urls),
+    #path('updateinfo/', views.updateinfo, name="updateinfo")
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

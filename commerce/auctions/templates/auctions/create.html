@@ -7,9 +7,16 @@
         <h6>{{ message }}</h6>
     {% endif %}
 
-    <form action="{% url 'create' %}" method = "POST">
+    <form action="{% url 'create' %}" method = "POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form }}
-        <input type="submit" value="Create Listing">
+        
+        <br>
+        上传图片：
+        <input name="photo" type="file" id="exampleInputFile">
+        <button id="photo" class="btn btn-danger" type="submit">上传图像</button>
+        <br><br>
+        <!-- <input type="submit" value="Create Listing"> -->
+        
     </form>
 {% endblock %}

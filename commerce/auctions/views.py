@@ -1,10 +1,15 @@
+from email.mime import image
+import os
+import re
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.urls import reverse
 from django import forms
 from django.contrib.auth.decorators import login_required
+from django.core.files.base import ContentFile
+from commerce.settings import BASE_DIR
 
 from .models import *
 
@@ -13,7 +18,7 @@ class ProductForm(forms.Form):
     title = forms.CharField(label="Name of product", max_length=64, widget=forms.TextInput(attrs={'class' : 'form-control col-lg-5'}))
     desc = forms.CharField(label="Description of product", max_length=64, widget=forms.TextInput(attrs={'class' : 'form-control col-lg-5'}))
     price = forms.CharField(label="Minimum bid", max_length=6, widget=forms.TextInput(attrs={'class' : 'form-control col-lg-5'}))
-    image = forms.CharField(label="Image URL (Optional)", max_length=100, widget=forms.TextInput(attrs={'class' : 'form-control col-lg-5'}), required=False)
+    
     category = forms.CharField(label="Category (Optional)", max_length=20, widget=forms.TextInput(attrs={'class' : 'form-control col-lg-5'}), required=False)
 
 def index(request):
@@ -73,20 +78,23 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
+
 # Creating an item
 def create(request):
     if request.method == "POST":
         item = request.POST["title"]
         description = request.POST["desc"]
         start = int(request.POST["price"])
-        picture = request.POST["image"]
+        img = request.FILES.get('photo') 
+        imgname = request.FILES.get('photo').name
         itemType = request.POST["category"]
         if itemType is not None :
             product = List(
                 title=item, 
                 desc=description, 
                 price=start, 
-                image=picture, 
+                image=img, 
+                imguser=imgname,
                 category=itemType,
                 owner=User.objects.get(username=request.user),
                 closed=False)
@@ -96,7 +104,8 @@ def create(request):
             product = List(
                 title=item, 
                 desc=description, 
-                image=picture, 
+                image=img,
+                imguser=imgname,
                 category=None,
                 owner=User.objects.get(username=request.user),
                 closed=False)
@@ -113,18 +122,18 @@ def create(request):
 
 # Render the listing page
 def listing(request, listing_item):
-    item = List.objects.get(pk=listing_item)
+    item = List.objects.get(id=listing_item)
     if request.method == "GET":
         seller = List.objects.get(id=listing_item).owner
-        auction = List.objects.get(id=listing_item)
-        comment = auction.comments.all()
+        # auction = List.objects.get(id=listing_item)
+        comment = item.comments.all()
         return render(request, 'auctions/auction.html', {
-            'auction': auction,
+            'auction': item,
             'person': seller,
             'comment': comment,
-            'bids': item.price
+            'bids': item.price,
         })
-
+        
 # Allow the user to bid
 def bid(request, listing_item):
     if request.method == "POST":
