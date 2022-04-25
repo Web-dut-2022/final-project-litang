@@ -1,4 +1,4 @@
-{% extends "auctions/layout.html" %}
+{% extends "auctions/index.html" %}
 
 {% block body %}
     {% if auction.closed == False %}
@@ -32,7 +32,7 @@
             <div class="col-sm-5">
                 {% if auction.image %}
                 <div class="col-sm-3">
-                    <img src="{{ auction.image }}" alt="image" style="width: 250px; height: 250px">
+                    <img src="/{{ auction.image }}" alt="image" style="width: 250px; height: 250px">
                 </div>
                 {% else %}
                     <div class="col-sm-3"></div>

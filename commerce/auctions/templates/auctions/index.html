@@ -9,7 +9,8 @@
         <div class="row">
             {% if list.image %}
                 <div class="col-sm-3">
-                    <img src="{{ list.image }}" alt="image" style="width: 175px; height: 175px">
+                    <img src="{{list.image}}" alt="" style="width: 175px; height: 175px"/>
+                    
                 </div>
             {% else %}
                 <div class="col-sm-3"></div>
@@ -24,7 +25,7 @@
                     <h5>Price: ${{ list.price }}</h5>
                 {% endif %}
                 <h5>Seller: {{ list.owner }}</h5>
-                <a href="{% url 'listing' list.id %}">Listing page</a>
+                <a href="{% url 'listing' list.id%}">Listing page</a>
             </div>
         </div>
     </div>
