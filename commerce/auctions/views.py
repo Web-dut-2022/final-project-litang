@@ -1,6 +1,7 @@
 from email.mime import image
 import os
 import re
+from turtle import title
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -217,9 +218,25 @@ def category(request):
     if request.method == "POST":
         category_input = request.POST["category"]
         return render(request, "auctions/category.html", {
+        #模拟搜索功能，filter()
         "lists": List.objects.filter(category=category_input, closed=False)
     })
     else:
         return render(request, "auctions/category.html", {
         "lists": List.objects.filter(closed=False)
     })
+
+#搜索商品
+def search(request):
+    if request.method == "POST":
+        search_input = request.POST["search"]
+        #title__contains和title__in实现模糊查询
+        list1 = List.objects.filter(title__contains=search_input, closed=False)
+        list2 = List.objects.filter(title__in=search_input, closed=False)
+        return render(request, "auctions/searchresult.html", {
+            "lists": list1|list2
+        })
+    else:
+        return render(request, "auctions/index.html", {
+        "lists": List.objects.filter(closed=False)
+        })

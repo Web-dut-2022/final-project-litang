@@ -17,6 +17,7 @@ urlpatterns = [
     path("watch_open", views.watch_open, name="watch_open"),
     path("add_comment/<str:listing_item>", views.add_comment, name="add_comment"),
     path("category", views.category, name="category"),
+    path("search", views.search, name="search"),
     path('admin/', admin.site.urls),
     #path('updateinfo/', views.updateinfo, name="updateinfo")
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
