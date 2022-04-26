@@ -1,25 +1,18 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
-    <form method=post action="{% url 'search' %}">    
-        {% csrf_token %}
-        <input type="text" name="search" placeholder="输入你想搜索的拍卖品...">
-        
-    </form>
-    {% for list in lists %} 
-
+    <h2>搜索结果</h2>
+    {% for list in lists %}
     <div class="container border p-2 m-2" style="width: 750px;">
         <div class="row">
             {% if list.image %}
-                <div class="col-sm-3">
-                    <img src="{{list.image}}" alt="" style="width: 175px; height: 175px"/>
-                    
-                </div>
+            <div class="col-sm-3">
+                <img src="{{ list.image }}" alt="image" style="width: 175px; height: 175px">
+            </div>
             {% else %}
                 <div class="col-sm-3"></div>
             {% endif %}
-            
+
             <div class="col-sm-5">
                 <h2>{{ list.title }}</h2>
                 <h6>{{ list.desc }}</h6>
@@ -29,7 +22,7 @@
                     <h5>Price: ${{ list.price }}</h5>
                 {% endif %}
                 <h5>Seller: {{ list.owner }}</h5>
-                <a href="{% url 'listing' list.id%}">Listing page</a>
+                <a href="{% url 'listing' list.id %}">Listing page</a>
             </div>
         </div>
     </div>
