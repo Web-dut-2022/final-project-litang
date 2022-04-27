@@ -1,0 +1,30 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>{{cate}}</h2><br>
+    {% for item in watchList %}
+    <div class="container border p-2 m-2" style="width: 750px;">
+        <div class="row">
+            {% if item.image %}
+            <div class="col-sm-3">
+                <img src="/{{ item.image }}" alt="image" style="width: 175px; height: 175px">
+            </div>
+            {% else %}
+                <div class="col-sm-3"></div>
+            {% endif %}
+
+            <div class="col-sm-5">
+                <h2>{{ item.title }}</h2>
+                <h6>{{ item.desc }}</h6>
+                {% if item.bids != None %}
+                    <h5>Highest bid: ${{ item.bids.cost }}</h5>
+                {% else %}
+                    <h5>Price: ${{ item.price }}</h5>
+                {% endif %}
+                <h5>Seller: {{ item.owner }}</h5>
+                <a href="{% url 'listing' item.id %} ">Listing page</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}

@@ -23,7 +23,9 @@
                 {% endif %}
                 <h5>Seller: {{ item.owner }}</h5>
                 <a href="{% url 'listing' item.id %} ">Listing page</a>
+                <input name="delete" type="submit" value="从收藏夹删除">
             </div>
+            
         </div>
     </div>
     {% endfor %}
