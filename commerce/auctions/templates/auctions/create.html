@@ -1,7 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Create an item</h2>
+    <h2>新建拍卖</h2>
 
     {% if message %}
         <h6>{{ message }}</h6>
@@ -9,14 +9,11 @@
 
     <form action="{% url 'create' %}" method = "POST" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form }}
-        
+        {{ form }}       
         <br>
         上传图片：
         <input name="photo" type="file" id="exampleInputFile">
         <button id="photo" class="btn btn-danger" type="submit">上传图像并提交</button>
-        <br><br>
-       
-        
+        <br><br>        
     </form>
 {% endblock %}

@@ -1,7 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Watchlist</h2>
+    <h2>收藏夹</h2>
     {% for item in watchList %}
     <div class="container border p-2 m-2" style="width: 750px;">
         <div class="row">
@@ -17,13 +17,13 @@
                 <h2>{{ item.title }}</h2>
                 <h6>{{ item.desc }}</h6>
                 {% if item.bids != None %}
-                    <h5>Highest bid: ${{ item.bids.cost }}</h5>
+                    <h5>最高出价：{{ item.bids.cost }}元</h5>
                 {% else %}
-                    <h5>Price: ${{ item.price }}</h5>
+                    <h5>起拍价：{{ item.price }}元</h5>
                 {% endif %}
-                <h5>Seller: {{ item.owner }}</h5>
-                <a href="{% url 'listing' item.id %} ">Listing page</a>
-                <input name="delete" type="submit" value="从收藏夹删除">
+                <h5>卖家: {{ item.owner }}</h5>
+                <a href="{% url 'listing' item.id %} ">详情</a>
+                <a href="{% url 'delete' item.id%} ">删除</a>
             </div>
             
         </div>

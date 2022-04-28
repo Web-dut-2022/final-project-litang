@@ -1,35 +1,33 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2>所有拍卖品</h2>
     <form method=post action="{% url 'search' %}">    
         {% csrf_token %}
         <input type="text" name="search" placeholder="输入你想搜索的拍卖品...">
-        
     </form>
-    {% for list in lists %} 
 
-    <div class="container border p-2 m-2" style="width: 750px;">
-        <div class="row">
-            {% if list.image %}
-                <div class="col-sm-3">
-                    <img src="{{list.image}}" alt="" style="width: 175px; height: 175px"/>
-                    
-                </div>
-            {% else %}
-                <div class="col-sm-3"></div>
-            {% endif %}
+    {% for list in lists %} 
+        <div class="container border p-2 m-2" style="width: 750px;">
+            <div class="row">
+                {% if list.image %}
+                    <div class="col-sm-3">
+                        <img src="{{list.image}}" alt="" style="width: 175px; height: 175px"/>
+                    </div>
+                {% else %}
+                    <div class="col-sm-3"></div>
+                {% endif %}
             
             <div class="col-sm-5">
                 <h2>{{ list.title }}</h2>
                 <h6>{{ list.desc }}</h6>
                 {% if list.bids != None %}
-                    <h5>Highest bid: ${{ list.bids.cost }}</h5>
+                    <h5>最高出价：{{ list.bids.cost }}元</h5>
                 {% else %}
-                    <h5>Price: ${{ list.price }}</h5>
+                    <h5>起拍价: {{ list.price }}元</h5>
                 {% endif %}
-                <h5>Seller: {{ list.owner }}</h5>
-                <a href="{% url 'listing' list.id%}">Listing page</a>
+                <h5>卖家: {{ list.owner }}</h5>
+                <a href="{% url 'listing' list.id%}">商品详情</a>
             </div>
         </div>
     </div>

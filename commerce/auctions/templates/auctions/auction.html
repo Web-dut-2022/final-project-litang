@@ -1,65 +1,66 @@
-{% extends "auctions/index.html" %}
+{% extends "auctions/layout.html" %}
 
 {% block body %}
     {% if auction.closed == False %}
         <form action="{% url 'watch' auction.id %}" method="post">
             {% csrf_token %}
-            <button id="button-auction" class="button-auction" type="submit"><i id="heart" class="fa fa-heart-o"></i>Watchlist</button>
+            <button id="button-auction" class="button-auction" type="submit"><i id="heart" class="fa fa-heart-o"></i>加入收藏夹</button>
         </form>   
     {% endif %}
-    <br>
+    
     <div style="width: 1000px;">
         <div class="row">
             <div class="col-sm-5">
                 <h1>{{ auction.title }}</h1>
 
-                <h3>Description: {{ auction.desc }}</h3>
-                {% if auction.category %}
-                    <h3>Category: {{ auction.category }}</h3>
-                {% else %}
-                    <h3>Category: None</h3>
-                {% endif %}
-                <h3>Sold by: {{ person }}</h3>
+                <h3>描述: {{ auction.desc }}</h3>
+                <h3>分类: {{ auction.category }}</h3>
+                <h3>卖家: {{ person }}</h3>
 
                 {% if auction.closed %}
-                    <h3>Sold to {{auction.bids.user}}</h3>
+                    <h3>花落谁家： {{auction.bids.user}}</h3>
+                    <h3>成交价：{{auction.bids.cost}}元</h3>
                 {% else %}
-                    <h3>Starting price: ${{auction.price}}</h3>
-                {% if auction.bids.cost %}
-                    <h3>Highest bid: ${{auction.bids.cost}} by {{auction.bids.user}}</h3>
+                    <h3>起拍价: {{auction.price}}元</h3>
+                    {% if auction.bids.cost %}
+                        <h3>目前最高价: {{auction.bids.user}}出价 {{auction.bids.cost}}元 </h3>
+                    {% endif %}
                 {% endif %}
             </div>
             <div class="col-sm-5">
                 {% if auction.image %}
-                <div class="col-sm-3">
-                    <img src="/{{ auction.image }}" alt="image" style="width: 250px; height: 250px">
-                </div>
+                    <div class="col-sm-3">
+                        <img src="/{{ auction.image }}" alt="image" style="width: 250px; height: 250px">
+                    </div>
                 {% else %}
                     <div class="col-sm-3"></div>
                 {% endif %}
             </div>
         </div>
     </div>
-        <br>
-        {% if request.user != auction.owner %}
+        
+    {% if request.user != auction.owner and auction.closed == False%}
         <form action="{% url 'bid' auction.id %}" method="post">
             {% csrf_token %}
-            <input type="number" name="maxBid" placeholder="Total bid">
-            <button type="submit">Bid here</button>
+            <input type="number" name="maxBid" placeholder="请输入出价...">
+            <button type="submit">提交</button>
         </form>
-        {% else %}
-            <form action="{% url 'close' auction.id%}" method="post">
-                {% csrf_token %}
-                <button type="submit">Close Auction</button>
-            </form>       
-        {% endif %}   
     {% endif %}
+
+    {% if request.user == auction.owner and auction.closed == False%}
+        <form action="{% url 'close' auction.id%}" method="post">
+            {% csrf_token %}
+            <button type="submit">结束拍卖！</button>
+        </form>       
+    {% endif %}   
+            
     <br>
     <form method=post action="{% url 'add_comment' auction.id %}">
         {% csrf_token %}
-        <input type="text" name="comment" placeholder="comment">
-        <button type="submit">Comment</button>
+        <input type="text" name="comment" placeholder="请输入评论...">
+        <button type="submit">评论</button>
     </form>
+   
     {% for comments in comment %}
         <h6>{{comments}}</h6>
     {% endfor %} 
