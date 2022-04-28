@@ -7,40 +7,45 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
     </head>
-    <body>
-        <h1>Auctions</h1>
+    <body style="color: rgb(95, 186, 88); background-color: antiquewhite;">
+        <h1>天狗拍卖</h1>
         <div>
             {% if user.is_authenticated %}
-                Signed in as <strong>{{ user.username }}</strong>.
+                当前登录： <strong>{{ user.username }}</strong>.
             {% else %}
-                Not signed in.
+                未登录.
             {% endif %}
         </div>
         <ul class="nav">
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
+                <a class="nav-link" href="{% url 'index' %}">所有拍卖品</a>
             </li>
 
             {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'create' %}">Create Listings</a>
+                    <a class="nav-link" href="{% url 'create' %}">新建拍卖</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'watch_open' %}">Watchlist</a>
+                    <a class="nav-link" href="{% url 'watch_open' %}">收藏夹</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'category' %}">Category</a>
+                    <a class="nav-link" href="{% url 'category' %}">分类</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                    <a class="nav-link" href="{% url 'logout' %}">退出登录</a>
                 </li>
-                
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'myitem' %}">我的发布</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'gotit' %}">我拍到的</a>
+                </li>
             {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                    <a class="nav-link" href="{% url 'login' %}">登录</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    <a class="nav-link" href="{% url 'register' %}">注册</a>
                 </li>
             {% endif %}
         </ul>
@@ -49,3 +54,5 @@
         {% endblock %}
     </body>
 </html>
+
+

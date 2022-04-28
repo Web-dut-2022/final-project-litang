@@ -1,18 +1,19 @@
 {% extends "auctions/layout.html" %}
-
+<!-- 去除搜索块的index界面 -->
 {% block body %}
-    <h2>搜索结果</h2>
-    {% for list in lists %}
+    <h2>所有拍卖品</h2>
+    {% for list in lists %} 
+
     <div class="container border p-2 m-2" style="width: 750px;">
         <div class="row">
             {% if list.image %}
-            <div class="col-sm-3">
-                <img src="{{ list.image }}" alt="image" style="width: 175px; height: 175px">
-            </div>
+                <div class="col-sm-3">
+                    <img src="{{list.image}}" alt="" style="width: 175px; height: 175px"/>
+                </div>
             {% else %}
                 <div class="col-sm-3"></div>
             {% endif %}
-
+            
             <div class="col-sm-5">
                 <h2>{{ list.title }}</h2>
                 <h6>{{ list.desc }}</h6>
@@ -21,8 +22,8 @@
                 {% else %}
                     <h5>起拍价：{{ list.price }}元</h5>
                 {% endif %}
-                <h5>卖家: {{ list.owner }}</h5>
-                <a href="{% url 'listing' list.id %}">详情</a>
+                <h5>卖家：{{ list.owner }}</h5>
+                <a href="{% url 'listing' list.id%}">详情</a>
             </div>
         </div>
     </div>

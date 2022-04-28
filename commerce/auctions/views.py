@@ -16,10 +16,10 @@ from .models import *
 
 
 class ProductForm(forms.Form):
-    title = forms.CharField(label="Name of product", max_length=64, widget=forms.TextInput(attrs={'class' : 'form-control col-lg-5'}))
-    desc = forms.CharField(label="Description of product", max_length=64, widget=forms.TextInput(attrs={'class' : 'form-control col-lg-5'}))
-    price = forms.CharField(label="Minimum bid", max_length=6, widget=forms.TextInput(attrs={'class' : 'form-control col-lg-5'}))
-    category = forms.CharField(label="Category", max_length=20, widget=forms.TextInput(attrs={'class' : 'form-control col-lg-5'}))
+    title = forms.CharField(label="商品名称", max_length=64, widget=forms.TextInput(attrs={'class' : 'form-control col-lg-5'}))
+    desc = forms.CharField(label="商品描述", max_length=64, widget=forms.TextInput(attrs={'class' : 'form-control col-lg-5'}))
+    price = forms.CharField(label="起拍价", max_length=6, widget=forms.TextInput(attrs={'class' : 'form-control col-lg-5'}))
+    category = forms.CharField(label="分类", max_length=20, widget=forms.TextInput(attrs={'class' : 'form-control col-lg-5'}))
 
 def index(request):
     return render(request, "auctions/index.html", {
@@ -74,6 +74,13 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+#我的发布
+def myitem(request):
+    myitems = List.objects.filter(owner=request.user)
+    return render(request, "auctions/nosearchindex.html", {
+        'lists': myitems
+    })
 
 # 创建拍卖
 def create(request):
@@ -153,6 +160,23 @@ def close(request, listing_item):
         else:
             return HttpResponseRedirect(reverse("index"))
 
+#我拍到的
+def gotit(request):
+    #用户所有出价的记录
+    gotits = Bids.objects.filter(user=request.user)
+    gotit_id=[]
+    for gotit in gotits:
+        gotit_id.append(gotit.id)
+    gotit_items = List.objects.filter(bids_id__in=gotit_id)
+    if len(gotit_items) > 0:
+        return render(request, "auctions/nosearchindex.html", {
+            'lists': gotit_items
+        })
+    return render(request, "auctions/nosearchindex.html", {
+        'lists': None
+    })
+    
+
 # 加入收藏夹
 def watch(request, listing_item):
     if request.method == "POST":
@@ -179,13 +203,22 @@ def watch_open(request):
     try:
         myWatchList = WatchList.objects.get(watch_user=request.user)
     except WatchList.DoesNotExist:
-        return render(request, "auctions/watchlistnotfound.html")
-    #删除收藏夹中的商品
-    if request.method == "POST":
-        item = request.POST["delete"]
+        return render(request, "auctions/watchlist.html")
     return render(request, "auctions/watchlist.html", {
         'watchList': myWatchList.auctions.filter(closed=False)
     })
+
+    
+
+#删除收藏夹中的物品
+def delete(request, listing_item):
+    item = List.objects.get(id=listing_item)
+    watch = WatchList.objects.get(watch_user=request.user)
+    if request.method == "GET":
+        watch.auctions.remove(item)
+        watch.save()
+    #重定向到查看方法
+    return HttpResponseRedirect(reverse("watch_open"))
 
 # 评论功能
 def add_comment(request, listing_item):

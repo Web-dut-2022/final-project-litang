@@ -1,5 +1,5 @@
 {% extends "auctions/layout.html" %}
-
+<!-- 进入某一分类 -->
 {% block body %}
     <h2>{{cate}}</h2><br>
     {% for item in watchList %}
@@ -17,12 +17,12 @@
                 <h2>{{ item.title }}</h2>
                 <h6>{{ item.desc }}</h6>
                 {% if item.bids != None %}
-                    <h5>Highest bid: ${{ item.bids.cost }}</h5>
+                    <h5>最高出价：{{ item.bids.cost }}</h5>
                 {% else %}
-                    <h5>Price: ${{ item.price }}</h5>
+                    <h5>起拍价：{{ item.price }}</h5>
                 {% endif %}
-                <h5>Seller: {{ item.owner }}</h5>
-                <a href="{% url 'listing' item.id %} ">Listing page</a>
+                <h5>卖家: {{ item.owner }}</h5>
+                <a href="{% url 'listing' item.id %} ">商品详情</a>
             </div>
         </div>
     </div>
